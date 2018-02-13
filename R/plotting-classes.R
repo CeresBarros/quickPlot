@@ -58,6 +58,32 @@ setClassUnion(name = "griddedClasses",
 )
 
 ################################################################################
+#' The \code{sfClasses} class
+#'
+#' This class is the union of sf classes (sf & sfc)
+#'
+#' Members:
+#'
+#' \itemize{
+#'   \item \code{sf}, \code{sfc};
+#' }
+#'
+#' Notably missing is \code{RasterBrick}, for now.
+#'
+#' @seealso \code{\link{quickPlotClasses}}
+#'
+#' @aliases sfClasses
+#' @importClassesFrom sf sf
+#' @importClassesFrom sf sfc
+#' @name sfClasses-class
+#' @rdname sfClasses-class
+#' @author Eliot McIntire
+#' @exportClass sfClasses
+setClassUnion(name = "sfClasses",
+              members = c("sf", "sfc")
+)
+
+################################################################################
 #' The \code{spatialObjects} class
 #'
 #' This class is the union of several spatial objects from \pkg{raster} and
@@ -86,6 +112,8 @@ setClassUnion(name = "griddedClasses",
 #' @importClassesFrom sp SpatialPointsDataFrame
 #' @importClassesFrom sp SpatialPolygons
 #' @importClassesFrom sp SpatialPolygonsDataFrame
+#' @importClassesFrom sf sfc
+#' @importClassesFrom sf sf
 #' @name spatialObjects-class
 #' @rdname spatialObjects-class
 #' @author Eliot McIntire
@@ -95,7 +123,8 @@ setClassUnion(name = "spatialObjects",
                           "SpatialLines", "SpatialLinesDataFrame",
                           "SpatialPixels", "SpatialPixelsDataFrame",
                           "SpatialPoints", "SpatialPointsDataFrame",
-                          "SpatialPolygons", "SpatialPolygonsDataFrame")
+                          "SpatialPolygons", "SpatialPolygonsDataFrame",
+                          "sf", "sfc")
 )
 
 

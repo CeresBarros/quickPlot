@@ -32,6 +32,7 @@ Imports:
     raster,
     RColorBrewer,
     rgdal,
+    sf,
     sp,
     stats
 Suggests:

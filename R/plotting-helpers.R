@@ -1019,6 +1019,25 @@ setMethod(
 
 setMethod(
   ".preparePlotGrob",
+  signature = c("sfClasses", ".quickPlotGrob"),
+  definition = function(grobToPlot, sGrob, takeFromPlotObj, arr, newArr,
+                        quickPlotGrobCounter, subPlots, cols) {
+    if (!is.null(sGrob@plotArgs$zoomExtent)) {
+      stop("Can not yet handle zooming of sf objects")
+      grobToPlot <- crop(grobToPlot, sGrob@plotArgs$zoomExtent)
+    }
+
+    # This handles SpatialPointsDataFrames with column "color"
+    #if (any(grepl(pattern = "color", names(grobToPlot))) & is.null(cols))
+    #  sGrob@plotArgs$cols <- unlist(getColors(grobToPlot))
+    grobToPlot <- as(grobToPlot, "Spatial")
+    .preparePlotGrob(grobToPlot, sGrob, takeFromPlotObj, arr, newArr,
+                     quickPlotGrobCounter, subPlots, cols)
+  })
+
+
+setMethod(
+  ".preparePlotGrob",
   signature = c("ANY", ".quickPlotGrob"),
   definition = function(grobToPlot, sGrob, takeFromPlotObj, arr, newArr,
                         quickPlotGrobCounter, subPlots, cols) {
@@ -1141,7 +1160,8 @@ setMethod(
                         vps, nonPlotArgs) {
     seekViewport(subPlots, recording = FALSE)
 
-    if (is.list(grobToPlot)) {
+    browser()
+    if (inherits(grobToPlot, "list")) {
       # This is for base plot calls... the grobToPlot is a call i.e,. a name
       # Because base plotting is not set up to overplot,
       # must plot a white rectangle
@@ -1280,6 +1300,7 @@ setMethod(
         sGrob@plotArgs$legendTxt <- NULL
       }
 
+      browser()
       plotGrobCall <- list(grobToPlot = zMat$z, col = zMat$cols,
                            size = unit(sGrob@plotArgs$size, "points"),
                            real = zMat$real,
@@ -1469,7 +1490,7 @@ setMethod(
       }
     } else {
       if (takeFromPlotObj) {
-        if (!inherits(toPlot, "gg") & !inherits(toPlot, "igraph")) {
+        if (!inherits(toPlot, c("gg", "igraph", "sf", "sfc"))) { # these are all stored as lists
           grobToPlot <- unlist(toPlot, recursive = FALSE)
         } else {
           grobToPlot <- toPlot
@@ -1874,6 +1895,7 @@ setMethod(
   signature = c("SpatialPoints"),
   definition = function(grobToPlot, col, size,
                         legend, gp = gpar(), pch, speedup, name, vp, ...) {
+    browser()
     speedupScale <- 40
     speedupScale <- if (grepl(proj4string(grobToPlot), pattern = "longlat")) {
       pointDistance(
